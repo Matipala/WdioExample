@@ -52,29 +52,26 @@ exports.config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-capabilities: [
-    {
-        maxInstances: 1, // opcional: cuántas instancias de Chrome quieres lanzar
-        browserName: 'chrome',
-        'goog:chromeOptions': {
-            args: [
-                '--disable-infobars',   // Quitar "Chrome está siendo controlado..."
-                '--disable-extensions', // Deshabilitar extensiones
-                '--start-maximized'     // Maximizar ventana
-            ]
-        }
-    },
-    // {
-    //     browserName: 'MicrosoftEdge',
-    //     'ms:edgeOptions': {
-    //         args: [
-    //             '--disable-infobars',
-    //             '--disable-extensions',
-    //             '--start-maximized'
-    //         ]
-    //     }
-    // }
-],
+    capabilities: [
+        {
+            browserName: 'chrome',
+            'goog:chromeOptions': {
+                args: [
+                    '--headless', '--no-sandbox', '--disable-dev-shm-usage'
+                ]
+            }
+        },
+        // {
+        //     browserName: 'MicrosoftEdge',
+        //     'ms:edgeOptions': {
+        //         args: [
+        //             '--disable-infobars',
+        //             '--disable-extensions',
+        //             '--start-maximized'
+        //         ]
+        //     }
+        // }
+    ],
 
     //
     // ===================
@@ -124,8 +121,8 @@ capabilities: [
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
     //services: [
-        //['chromedriver'],
-        //['edgedriver']
+    //['chromedriver'],
+    //['edgedriver']
     //],
 
 
@@ -138,7 +135,7 @@ capabilities: [
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'cucumber',
-    
+
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -154,13 +151,13 @@ capabilities: [
     // see also: https://webdriver.io/docs/dot-reporter
     //reporters: ['spec'],
     reporters: [
-                ['allure', {
-                outputDir: 'allure-results',
-                disableWebdriverStepsReporting: true,
-                disableWebdriverScreenshotsReporting: false,
-                useCucumberStepReporter: true
-	        }]
-		],
+        ['allure', {
+            outputDir: 'allure-results',
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: false,
+            useCucumberStepReporter: true
+        }]
+    ],
 
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
@@ -301,11 +298,11 @@ capabilities: [
      * @param {number}                 result.duration  duration of scenario in milliseconds
      * @param {object}                 context          Cucumber World object
      */
-        afterScenario: async function (world, result) {
+    afterScenario: async function (world, result) {
         if (result.passed === false) {
             await browser.takeScreenshot();
         }
-        },
+    },
     /**
      *
      * Runs after a Cucumber Feature.
@@ -314,7 +311,7 @@ capabilities: [
      */
     // afterFeature: function (uri, feature) {
     // },
-    
+
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {string} commandName hook command name
