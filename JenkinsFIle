@@ -30,14 +30,14 @@ pipeline {
         stage('Ejecutar WDIO') {
             steps {
                 echo "Ejecutando pruebas WDIO..."
-                bat "npx wdio run wdio.conf.js"
+                sh "npx wdio run wdio.conf.js"
             }
         }
 
         stage('Generar reporte Allure') {
             steps {
                 echo "Generando reporte Allure..."
-                bat """
+                sh """
                 npx allure generate %ALLURE_RESULTS% --clean -o %ALLURE_REPORT%
                 """
             }
