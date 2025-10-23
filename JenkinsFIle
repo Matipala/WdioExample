@@ -17,13 +17,13 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/RoyGuido/WDIO_Example.git'
+                git branch: 'main', url: 'https://github.com/Matipala/WdioExample.git'
             }
         }
 
         stage('Instalar dependencias') {
             steps {
-                bat 'npm install'
+                sh 'npm install'
             }
         }
 
