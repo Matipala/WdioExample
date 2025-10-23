@@ -2,12 +2,13 @@ pipeline {
     agent any
 
     environment {
-        // Carpeta absoluta para resultados y reportes
+        // Rutas absolutas para los resultados y reportes de Allure
         ALLURE_RESULTS = "${env.WORKSPACE}/allure-results"
         ALLURE_REPORT  = "${env.WORKSPACE}/allure-report"
     }
 
     stages {
+
         stage('Preparar Workspace') {
             steps {
                 echo "Limpiando workspace..."
@@ -17,12 +18,14 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                echo "Clonando repositorio..."
                 git branch: 'main', url: 'https://github.com/Matipala/WdioExample.git'
             }
         }
 
         stage('Instalar dependencias') {
             steps {
+                echo "Instalando dependencias NPM..."
                 sh 'npm install'
             }
         }
@@ -30,26 +33,26 @@ pipeline {
         stage('Ejecutar WDIO') {
             steps {
                 echo "Ejecutando pruebas WDIO..."
-                sh "npx wdio run wdio.conf.js"
+                sh 'npx wdio run wdio.conf.js'
             }
         }
 
         stage('Generar reporte Allure') {
             steps {
                 echo "Generando reporte Allure..."
-                sh """
-                npx allure generate %ALLURE_RESULTS% --clean -o %ALLURE_REPORT%
-                """
+                sh '''
+                    npx allure generate "$ALLURE_RESULTS" --clean -o "$ALLURE_REPORT"
+                '''
             }
         }
 
         stage('Publicar reporte Allure en Jenkins') {
             steps {
-                echo "Publicando reporte Allure usando el plugin..."
+                echo "Publicando reporte Allure con el plugin..."
                 allure([
                     includeProperties: false,
                     jdk: '',
-                    results: [[path: '**/allure-results/*.json']], // <-- patrón agregado
+                    results: [[path: 'allure-results']],
                     reportBuildPolicy: 'ALWAYS'
                 ])
             }
@@ -58,7 +61,7 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline finalizada'
+            echo ' Pipeline finalizada — limpiando workspace.'
         }
     }
 }
